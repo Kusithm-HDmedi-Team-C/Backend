@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthCheckApiController {
     @RequestMapping("/")
     public String hdMedi() {
-        return "hdMedi-Team-C";
+        return "hdMedi-Team-C-test";
     }
 }
