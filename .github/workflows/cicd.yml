@@ -30,9 +30,9 @@ jobs:
           distribution: 'temurin'
 
       - name: 🐧 application.yml 파일을 가져옵니다.
-        run: touch ./src/main/resources/application.yml
+#        run: touch ./src/main/resources/application.yml
 
-      - run: echo "${{secrets.APPLICATION}}" > ./src/main/resources/application.yml
+        run: echo "${{secrets.APPLICATION}}" > ./src/main/resources/application.yml
       - uses: actions/upload-artifact@v2
         with:
           name: application.yml
