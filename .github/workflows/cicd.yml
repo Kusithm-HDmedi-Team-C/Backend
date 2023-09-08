@@ -29,17 +29,11 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: 🐧 빈 application.yml 파일을 생성 합니다.
-        run: touch ./src/main/resources/application.yml
-
-      - name: 🐧 application.yml 파일을 가져 옵니다.
-        run: echo "${{secrets.APPLICATION}}" > ./src/main/resources/application.yml
-
       - name: 🐧 application.yml 파일을 생성 합니다.
-        uses: actions/upload-artifact@v2
-        with:
-          name: application.yml
-          path: ./src/main/resources/application.yml
+        run: |
+          mkdir ./src/main/resources
+          touch ./src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml # github actions에서 설정한 값을 application.yml 파일에 쓰기
 
       - name: 🐧 gradle build를 위한 권한을 부여합니다.
         run: chmod +x gradlew
