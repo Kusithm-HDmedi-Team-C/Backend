@@ -1,6 +1,7 @@
 package com.example.kusithms_hdmedi_project.domain.hospital.entity;
 
 import com.example.kusithms_hdmedi_project.domain.review.entity.Review;
+import com.example.kusithms_hdmedi_project.domain.review.entity.VerifiedReview;
 import com.example.kusithms_hdmedi_project.global.common.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -41,7 +42,7 @@ public class Hospital extends BaseTimeEntity {
     private String area3;
 
     @OneToMany(mappedBy = "hospital")
-    private List<Review> reviews = new ArrayList<>();
+    private List<VerifiedReview> verifiedReviews = new ArrayList<>();
 
     @Builder
     public Hospital(String name, String telephone, String url, String mapUrl, int numberOfReviews, int totalRating, String area, String area1, String area2, String area3) {
