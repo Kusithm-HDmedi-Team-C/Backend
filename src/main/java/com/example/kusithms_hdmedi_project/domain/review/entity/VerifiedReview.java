@@ -31,7 +31,7 @@ public class VerifiedReview extends BaseTimeEntity {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "docker_name")
+    @Column(name = "doctor_name")
     private String doctor;
 
     @Column(name = "price")
