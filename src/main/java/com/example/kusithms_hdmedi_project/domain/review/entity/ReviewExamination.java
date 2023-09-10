@@ -2,6 +2,7 @@ package com.example.kusithms_hdmedi_project.domain.review.entity;
 
 import com.example.kusithms_hdmedi_project.global.common.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,4 +30,33 @@ public class ReviewExamination extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ExaminationType reviewType;
 
+    @Builder
+    public ReviewExamination(Review review, VerifiedReview verifiedReview, ExaminationType reviewType) {
+        this.review = review;
+        this.verifiedReview = verifiedReview;
+        this.reviewType = reviewType;
+    }
+
+    public static ReviewExamination createExaminationWithReview(Review review, ExaminationType reviewType) {
+        ReviewExamination reviewExamination = ReviewExamination.builder()
+                .review(review)
+                .reviewType(reviewType)
+                .build();
+        review.getReviewExaminations().add(reviewExamination);
+        return reviewExamination;
+    }
+    public static ReviewExamination createExaminationWithVerifiedReview(VerifiedReview verifiedReview, ExaminationType reviewType) {
+        ReviewExamination reviewExamination = ReviewExamination.builder()
+                .verifiedReview(verifiedReview)
+                .reviewType(reviewType)
+                .build();
+        verifiedReview.getReviewExaminations().add(reviewExamination);
+        return reviewExamination;
+    }
+
+
+    public void verifyReviewInExamination(VerifiedReview verifiedReview){
+        this.review = null;
+        this.verifiedReview = verifiedReview;
+    }
 }
