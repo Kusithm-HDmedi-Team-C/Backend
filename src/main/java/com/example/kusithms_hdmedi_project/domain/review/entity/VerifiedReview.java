@@ -46,13 +46,14 @@ public class VerifiedReview extends BaseTimeEntity {
     private Hospital hospital;
 
     @Builder
-    public VerifiedReview(String content, Integer rating, String imageUrl, String doctor, Integer price, Hospital hospital) {
+    public VerifiedReview(String content, Integer rating, String imageUrl, String doctor, Integer price, Hospital hospital, List<ReviewExamination> reviewExaminations) {
         this.content = content;
         this.rating = rating;
         this.imageUrl = imageUrl;
         this.doctor = doctor;
         this.price = price;
         this.hospital = hospital;
+        this.reviewExaminations = reviewExaminations;
     }
     public static VerifiedReview createVerifiedReviewWithHospital(Review review) {
         VerifiedReview verifiedReview = VerifiedReview.builder()
@@ -62,6 +63,7 @@ public class VerifiedReview extends BaseTimeEntity {
                 .imageUrl(review.getImageUrl())
                 .price(review.getPrice())
                 .doctor(review.getDoctor())
+                .reviewExaminations(review.getReviewExaminations())
                 .build();
         verifiedReview.getHospital().getVerifiedReviews().add(verifiedReview);
         return verifiedReview;
