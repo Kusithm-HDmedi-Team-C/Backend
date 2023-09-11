@@ -37,20 +37,19 @@ public class Review extends BaseTimeEntity {
     private int price;
 
     @OneToMany(mappedBy = "review", fetch = FetchType.LAZY)
-    private List<ReviewExamination> reviewExaminations= new ArrayList<>();
+    private List<ReviewExamination> reviewExaminations = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hospital_id")
     private Hospital hospital;
 
     @Builder
-    public Review(String content, int rating, String imageUrl, String doctor, int price, List<ReviewExamination> reviewExaminations, Hospital hospital) {
+    public Review(String content, int rating, String imageUrl, String doctor, int price, Hospital hospital) {
         this.content = content;
         this.rating = rating;
         this.imageUrl = imageUrl;
         this.doctor = doctor;
         this.price = price;
-        this.reviewExaminations = reviewExaminations;
         this.hospital = hospital;
     }
 
