@@ -124,10 +124,6 @@ class HospitalRepositoryTest {
                         .and(Sort.by("name").ascending());
                 PageRequest pageRequest = PageRequest.of(0, 10, sort);
                 Page<Hospital> page = hospitalRepository.findAll(pageRequest);
-//                System.out.println(page.getNumberOfElements());
-//                System.out.println(page.getSize());
-//                System.out.println(page.getNumber());
-
                 List<Hospital> actual = page.getContent();
 
                 Assertions.assertThat(actual).isEqualTo(expected1);
@@ -145,6 +141,112 @@ class HospitalRepositoryTest {
                 List<Hospital> actual = hospitalRepository.findAll(pageRequest).getContent();
 
                 Assertions.assertThat(actual).isEqualTo(expected2);
+            }
+        }
+    }
+
+    @Nested
+    class findByNameContaining_메서드는 {
+
+        private List<Hospital> expected1;
+        private List<Hospital> expected2;
+
+        @BeforeEach
+        void init() {
+            Hospital hospital1 = Hospital.builder()
+                    .name("서울청정신건강의학과의원 강남점")
+                    .telephone("02-111-1111")
+                    .url("www.aaa.com")
+                    .mapUrl("www.map.naver.com/aaa")
+                    .numberOfReviews(2)
+                    .totalRating(10)
+                    .area1("서울")
+                    .area2("동작구")
+                    .area3("사당로 42")
+                    .area("3층")
+                    .build();
+
+            Hospital hospital2 = Hospital.builder()
+                    .name("서울대학교어린이병원")
+                    .telephone("02-111-1111")
+                    .url("www.aaa.com")
+                    .mapUrl("www.map.naver.com/aaa")
+                    .numberOfReviews(4)
+                    .totalRating(8)
+                    .area1("서울")
+                    .area2("동작구")
+                    .area3("사당로 42")
+                    .area("3층")
+                    .build();
+
+            Hospital hospital3 = Hospital.builder()
+                    .name("서울정신건강의학과의원")
+                    .telephone("02-111-1111")
+                    .url("www.aaa.com")
+                    .mapUrl("www.map.naver.com/aaa")
+                    .numberOfReviews(10)
+                    .totalRating(79)
+                    .area1("서울")
+                    .area2("동작구")
+                    .area3("사당로 42")
+                    .area("3층")
+                    .build();
+
+            Hospital hospital4 = Hospital.builder()
+                    .name("국립나주병원")
+                    .telephone("02-111-1111")
+                    .url("www.aaa.com")
+                    .mapUrl("www.map.naver.com/aaa")
+                    .numberOfReviews(10)
+                    .totalRating(79)
+                    .area1("서울")
+                    .area2("동작구")
+                    .area3("사당로 42")
+                    .area("3층")
+                    .build();
+
+            Hospital hospital5 = Hospital.builder()
+                    .name("창원아이정신건강의학과의원")
+                    .telephone("02-111-1111")
+                    .url("www.aaa.com")
+                    .mapUrl("www.map.naver.com/aaa")
+                    .numberOfReviews(10)
+                    .totalRating(79)
+                    .area1("서울")
+                    .area2("동작구")
+                    .area3("사당로 42")
+                    .area("3층")
+                    .build();
+
+            em.persist(hospital1);
+            em.persist(hospital2);
+            em.persist(hospital3);
+            em.persist(hospital4);
+            em.persist(hospital5);
+
+            expected1 = List.of(hospital1, hospital2, hospital3);
+            expected2 = List.of();
+        }
+
+        @Nested
+        class 존재하는_이름으로_검색하면 {
+
+            @Test
+            void 병원정보를_제공한다() {
+                PageRequest pageRequest = PageRequest.of(0, 5);
+
+                Assertions.assertThat(hospitalRepository.findByNameContaining("서울", pageRequest).getContent()).isEqualTo(expected1);
+            }
+        }
+
+        @Nested
+        class 존재하지_않는_이름으로_검색하면 {
+
+            @Test
+            void 빈_리스트를_제공한다() {
+                PageRequest pageRequest = PageRequest.of(0, 5);
+
+                Assertions.assertThat(hospitalRepository.findByNameContaining("광주", pageRequest).getContent()).isEqualTo(expected2);
             }
         }
     }
