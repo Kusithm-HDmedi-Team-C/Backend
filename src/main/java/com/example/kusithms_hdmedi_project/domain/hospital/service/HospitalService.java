@@ -5,7 +5,7 @@ import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.Hospital
 import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalSearchDto;
 import com.example.kusithms_hdmedi_project.domain.hospital.entity.Hospital;
 import com.example.kusithms_hdmedi_project.domain.hospital.repository.HospitalRepository;
-import com.example.kusithms_hdmedi_project.domain.review.repository.VReviewRepository;
+import com.example.kusithms_hdmedi_project.domain.review.repository.VerifiedReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class HospitalService {
 
     private final HospitalRepository hospitalRepository;
-    private final VReviewRepository verifiedReviewRepository;
+    private final VerifiedReviewRepository verifiedReviewRepository;
 
     public HospitalPageDto getHospitalPage(SearchType searchType, int pageNumber, int pageSize) {
         Sort sort = Sort.by(searchType.getHospitalTableValue()).descending()
@@ -42,6 +42,6 @@ public class HospitalService {
     }
 
     public void getHospitalDetails(Long hospitalId, int reviewPageNum) {
-//        verifiedReviewRepository.findByHospitalId(Long hospitalId, reviewPageNum);
+//        verifiedReviewRepository.findByHospitalId(hospitalId, reviewPageNum);
     }
 }
