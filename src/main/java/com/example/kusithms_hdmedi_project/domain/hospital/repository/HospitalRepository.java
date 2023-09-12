@@ -14,5 +14,5 @@ public interface HospitalRepository extends JpaRepository<Hospital, Long> {
 
     Page<Hospital> findAll(Pageable pageable);
 
-    Page<Hospital> findByNameMatches(String name, Pageable pageable);
+    Page<Hospital> findByNameContaining(String name, Pageable pageable);
 }
