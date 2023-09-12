@@ -1,71 +1,42 @@
-package com.example.kusithms_hdmedi_project.domain.hospital.repository;
+package com.example.kusithms_hdmedi_project.domain.hospital.service;
 
 import com.example.kusithms_hdmedi_project.domain.hospital.dto.SearchType;
+import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalDto;
+import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalPageDto;
+import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalSearchDto;
 import com.example.kusithms_hdmedi_project.domain.hospital.entity.Hospital;
-import com.example.kusithms_hdmedi_project.global.error.exception.ErrorCode;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class HospitalRepositoryTest {
+class HospitalServiceTest {
 
     @PersistenceContext
     EntityManager em;
 
     @Autowired
-    HospitalRepository hospitalRepository;
-
-    @Test
-    public void HospitalRepository_조회기능_테스트() throws Exception {
-        // given
-        Hospital hospital = Hospital.builder()
-                .name("연세건강정신병원")
-                .telephone("02-822-0345")
-                .url("https://blog.naver.com/verydoc")
-                .mapUrl("https://map.naver.com/p/search/%EC%97%B0%EC%84%B8%EA%B1%B4%EA%B0%95%EC%A0%95%EC%8B%A0%EB%B3%91%EC%9B%90/place/1123328494?placePath=?entry=pll&from=nx&fromNxList=true&c=15.00,0,0,0,dh")
-                .numberOfReviews(0)
-                .totalRating(0)
-                .area("주유노빌딩 2층")
-                .area1("서울")
-                .area2("동작구")
-                .area3("상도로 264")
-                .build();
-
-        em.persist(hospital);
-        Long id = hospital.getId();
-
-        // when
-        Hospital hospital1 = hospitalRepository.findById(id).orElseThrow(() -> new RuntimeException(ErrorCode.ENTITY_NOT_FOUND.getMessage()));
-
-        // then
-        Assertions.assertThat(hospital1.getName()).isEqualTo(hospital.getName());
-        Assertions.assertThatExceptionOfType(RuntimeException.class)
-                        .isThrownBy(() -> hospitalRepository.findById(id + 1).orElseThrow(() -> new RuntimeException(ErrorCode.ENTITY_NOT_FOUND.getMessage())))
-                                .withMessage(ErrorCode.ENTITY_NOT_FOUND.getMessage());
-        Assertions.assertThatThrownBy(() -> hospitalRepository.findById(id + 1).orElseThrow(() -> new RuntimeException(ErrorCode.ENTITY_NOT_FOUND.getMessage())));
-
-    }
+    HospitalService hospitalService;
 
     @Nested
-    class findAllWithSearchType_메서드는 {
-
-        private List<Hospital> expected1;
-        private List<Hospital> expected2;
-
+    class getHospitalPage_메서드는 {
+        List<HospitalDto> expect1;
+        List<HospitalDto> expect2;
         @BeforeEach
         void init() {
             Hospital hospital1 = Hospital.builder()
@@ -75,6 +46,7 @@ class HospitalRepositoryTest {
                     .mapUrl("www.map.naver.com/aaa")
                     .numberOfReviews(2)
                     .totalRating(10)
+                    .averageRating(5)
                     .area1("서울")
                     .area2("동작구")
                     .area3("사당로 42")
@@ -82,12 +54,13 @@ class HospitalRepositoryTest {
                     .build();
 
             Hospital hospital2 = Hospital.builder()
-                    .name("병원1")
+                    .name("병원2")
                     .telephone("02-111-1111")
                     .url("www.aaa.com")
                     .mapUrl("www.map.naver.com/aaa")
                     .numberOfReviews(4)
                     .totalRating(8)
+                    .averageRating(2)
                     .area1("서울")
                     .area2("동작구")
                     .area3("사당로 42")
@@ -95,12 +68,13 @@ class HospitalRepositoryTest {
                     .build();
 
             Hospital hospital3 = Hospital.builder()
-                    .name("병원1")
+                    .name("병원3")
                     .telephone("02-111-1111")
                     .url("www.aaa.com")
                     .mapUrl("www.map.naver.com/aaa")
                     .numberOfReviews(10)
                     .totalRating(79)
+                    .averageRating(7.9)
                     .area1("서울")
                     .area2("동작구")
                     .area3("사당로 42")
@@ -111,45 +85,68 @@ class HospitalRepositoryTest {
             em.persist(hospital2);
             em.persist(hospital3);
 
-            expected1 = List.of(hospital3, hospital1, hospital2);
-            expected2 = List.of(hospital3, hospital2, hospital1);
+            expect1 = Stream.of(hospital3, hospital1, hospital2)
+                    .map(HospitalDto::of)
+                    .collect(Collectors.toList());
+            expect2 = Stream.of(hospital3, hospital2, hospital1)
+                    .map(HospitalDto::of)
+                    .collect(Collectors.toList());
         }
 
         @Nested
-        class AVERAGE_RATING로_조회하면 {
+        class pageSize와_pageNumber에_따라 {
 
-            @Test
-            void 만족도_순으로_병원정보를_제공한다() {
-                Sort sort = Sort.by(SearchType.AVERAGE_RATING.getHospitalTableValue()).descending()
-                        .and(Sort.by("name").ascending());
-                PageRequest pageRequest = PageRequest.of(0, 10, sort);
-                Page<Hospital> page = hospitalRepository.findAll(pageRequest);
-                List<Hospital> actual = page.getContent();
+            @Nested
+            class AVERAGE_RATING로_조회하면 {
 
-                Assertions.assertThat(actual).isEqualTo(expected1);
+                @Test
+                void 만족도_순으로_병원정보를_제공한다() {
+
+                    HospitalPageDto page = hospitalService.getHospitalPage(SearchType.AVERAGE_RATING, 0, 10);
+                    List<HospitalDto> hospitals = page.getHospitals();
+
+                    Assertions.assertThat(hospitals).extracting(
+                            HospitalDto::getName,
+                            HospitalDto::getAverageRating,
+                            HospitalDto::getNumberOfReviews)
+                            .contains(Tuple.tuple(expect1.get(0).getName(), expect1.get(0).getAverageRating(), expect1.get(0).getNumberOfReviews())
+                            , Tuple.tuple(expect1.get(1).getName(), expect1.get(1).getAverageRating(), expect1.get(1).getNumberOfReviews()),
+                                    Tuple.tuple(expect1.get(2).getName(), expect1.get(2).getAverageRating(), expect1.get(2).getNumberOfReviews()));
+                }
             }
-        }
 
-        @Nested
-        class NUMBER_OF_REVIEW로_조회하면 {
+            @Nested
+            class NUMBER_OF_REVIEW로_조회하면 {
 
-            @Test
-            void 리뷰_개수_순으로_병원정보를_제공한다() {
-                Sort sort = Sort.by(SearchType.NUMBER_OF_REVIEWS.getHospitalTableValue()).descending()
-                        .and(Sort.by("name").ascending());
-                PageRequest pageRequest = PageRequest.of(0, 10, sort);
-                List<Hospital> actual = hospitalRepository.findAll(pageRequest).getContent();
+                @Test
+                void 리뷰_개수_순으로_병원정보를_제공한다() {
+                    HospitalPageDto page = hospitalService.getHospitalPage(SearchType.NUMBER_OF_REVIEWS, 0, 3);
+                    List<HospitalDto> hospitals = page.getHospitals();
 
-                Assertions.assertThat(actual).isEqualTo(expected2);
+                    for (HospitalDto hospital : hospitals) {
+                        System.out.println(hospital);
+                    }
+
+                    for (HospitalDto hospitalDto : expect2) {
+                        System.out.println(hospitalDto);
+                    }
+
+                    Assertions.assertThat(hospitals).extracting(
+                                    HospitalDto::getName,
+                                    HospitalDto::getAverageRating,
+                                    HospitalDto::getNumberOfReviews)
+                            .contains(Tuple.tuple(expect2.get(0).getName(), expect2.get(0).getAverageRating(), expect2.get(0).getNumberOfReviews()),
+                                    Tuple.tuple(expect2.get(1).getName(), expect2.get(1).getAverageRating(), expect2.get(1).getNumberOfReviews()),
+                                    Tuple.tuple(expect2.get(2).getName(), expect2.get(2).getAverageRating(), expect2.get(2).getNumberOfReviews()));
+                }
             }
         }
     }
 
     @Nested
-    class findByNameContaining_메서드는 {
-
-        private List<Hospital> expected1;
-        private List<Hospital> expected2;
+    class searchHospitalsByName_메서드는 {
+        List<HospitalSearchDto> expect1;
+        List<HospitalSearchDto> expect2;
 
         @BeforeEach
         void init() {
@@ -224,29 +221,33 @@ class HospitalRepositoryTest {
             em.persist(hospital4);
             em.persist(hospital5);
 
-            expected1 = List.of(hospital1, hospital2, hospital3);
-            expected2 = List.of();
+            expect1 = List.of(HospitalSearchDto.of(hospital1), HospitalSearchDto.of(hospital2), HospitalSearchDto.of(hospital3));
+            expect2 = List.of();
         }
 
         @Nested
-        class 존재하는_이름으로_검색하면 {
+        class 존재하는_이름으로_조회하면 {
 
             @Test
-            void 병원정보를_제공한다() {
-                PageRequest pageRequest = PageRequest.of(0, 5);
+            void 만족도_순으로_병원정보를_제공한다() {
 
-                Assertions.assertThat(hospitalRepository.findByNameContaining("서울", pageRequest).getContent()).isEqualTo(expected1);
+                List<HospitalSearchDto> hospitals = hospitalService.searchHospitalsByName("서울");
+
+                Assertions.assertThat(hospitals).extracting(
+                                HospitalSearchDto::getName,
+                                HospitalSearchDto::getAddress)
+                        .contains(Tuple.tuple(expect1.get(0).getName(), expect1.get(0).getAddress())
+                                , Tuple.tuple(expect1.get(1).getName(), expect1.get(1).getAddress()));
             }
         }
 
         @Nested
-        class 존재하지_않는_이름으로_검색하면 {
-
+        class 존재하지않은_이름으로_조회하면 {
             @Test
-            void 빈_리스트를_제공한다() {
-                PageRequest pageRequest = PageRequest.of(0, 5);
-
-                Assertions.assertThat(hospitalRepository.findByNameContaining("광주", pageRequest).getContent()).isEqualTo(expected2);
+            void 빈_리스트를_리턴한다() {
+                List<HospitalSearchDto> hospitals = hospitalService.searchHospitalsByName("광주");
+                Assertions.assertThat(hospitals.size()).isEqualTo(0);
+                Assertions.assertThat(expect2).isEqualTo(hospitals);
             }
         }
     }
