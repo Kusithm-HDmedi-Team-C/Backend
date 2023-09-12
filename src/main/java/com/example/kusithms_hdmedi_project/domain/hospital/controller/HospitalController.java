@@ -37,4 +37,9 @@ public class HospitalController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.of(SuccessCode.OK, hospitals));
     }
+
+    @GetMapping("/details/{hospitalId}")
+    public void getHospitalDetails(@PathVariable Long hospitalId, @RequestParam(defaultValue = "0") int reviewPageNum) {
+        hospitalService.getHospitalDetails(hospitalId, reviewPageNum);
+    }
 }
