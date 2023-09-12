@@ -1,17 +1,23 @@
 package com.example.kusithms_hdmedi_project.domain.hospital.repository;
 
+import com.example.kusithms_hdmedi_project.domain.hospital.dto.SearchType;
 import com.example.kusithms_hdmedi_project.domain.hospital.entity.Hospital;
 import com.example.kusithms_hdmedi_project.global.error.exception.ErrorCode;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
 @SpringBootTest
 @Transactional
@@ -52,5 +58,94 @@ class HospitalRepositoryTest {
                                 .withMessage(ErrorCode.ENTITY_NOT_FOUND.getMessage());
         Assertions.assertThatThrownBy(() -> hospitalRepository.findById(id + 1).orElseThrow(() -> new RuntimeException(ErrorCode.ENTITY_NOT_FOUND.getMessage())));
 
+    }
+
+    @Nested
+    class findAllWithSearchType_메서드는 {
+
+        private List<Hospital> expected1;
+        private List<Hospital> expected2;
+
+        @BeforeEach
+        void init() {
+            Hospital hospital1 = Hospital.builder()
+                    .name("병원1")
+                    .telephone("02-111-1111")
+                    .url("www.aaa.com")
+                    .mapUrl("www.map.naver.com/aaa")
+                    .numberOfReviews(2)
+                    .totalRating(10)
+                    .area1("서울")
+                    .area2("동작구")
+                    .area3("사당로 42")
+                    .area("3층")
+                    .build();
+
+            Hospital hospital2 = Hospital.builder()
+                    .name("병원1")
+                    .telephone("02-111-1111")
+                    .url("www.aaa.com")
+                    .mapUrl("www.map.naver.com/aaa")
+                    .numberOfReviews(4)
+                    .totalRating(8)
+                    .area1("서울")
+                    .area2("동작구")
+                    .area3("사당로 42")
+                    .area("3층")
+                    .build();
+
+            Hospital hospital3 = Hospital.builder()
+                    .name("병원1")
+                    .telephone("02-111-1111")
+                    .url("www.aaa.com")
+                    .mapUrl("www.map.naver.com/aaa")
+                    .numberOfReviews(10)
+                    .totalRating(79)
+                    .area1("서울")
+                    .area2("동작구")
+                    .area3("사당로 42")
+                    .area("3층")
+                    .build();
+
+            em.persist(hospital1);
+            em.persist(hospital2);
+            em.persist(hospital3);
+
+            expected1 = List.of(hospital3, hospital1, hospital2);
+            expected2 = List.of(hospital3, hospital2, hospital1);
+        }
+
+        @Nested
+        class AVERAGE_RATING로_조회하면 {
+
+            @Test
+            void 만족도_순으로_병원정보를_제공한다() {
+                Sort sort = Sort.by(SearchType.AVERAGE_RATING.getHospitalTableValue()).descending()
+                        .and(Sort.by("name").ascending());
+                PageRequest pageRequest = PageRequest.of(0, 10, sort);
+                Page<Hospital> page = hospitalRepository.findAll(pageRequest);
+//                System.out.println(page.getNumberOfElements());
+//                System.out.println(page.getSize());
+//                System.out.println(page.getNumber());
+
+                List<Hospital> actual = page.getContent();
+
+                Assertions.assertThat(actual).isEqualTo(expected1);
+            }
+        }
+
+        @Nested
+        class NUMBER_OF_REVIEW로_조회하면 {
+
+            @Test
+            void 리뷰_개수_순으로_병원정보를_제공한다() {
+                Sort sort = Sort.by(SearchType.NUMBER_OF_REVIEWS.getHospitalTableValue()).descending()
+                        .and(Sort.by("name").ascending());
+                PageRequest pageRequest = PageRequest.of(0, 10, sort);
+                List<Hospital> actual = hospitalRepository.findAll(pageRequest).getContent();
+
+                Assertions.assertThat(actual).isEqualTo(expected2);
+            }
+        }
     }
 }
