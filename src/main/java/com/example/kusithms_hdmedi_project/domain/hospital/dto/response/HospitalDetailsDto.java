@@ -14,4 +14,7 @@ public class HospitalDetailsDto {
     private String mapUrl;
     // TODO VerifiedReview -> VerifiedReviewDto 변경 필요
     private List<VerifiedReview> reviews;
+    private int pageNumber;
+    private int count;
+    private boolean hasNextPage;
 }
