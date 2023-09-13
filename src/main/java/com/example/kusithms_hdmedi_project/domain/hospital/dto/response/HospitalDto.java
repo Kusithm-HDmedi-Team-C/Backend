@@ -11,6 +11,7 @@ public class HospitalDto {
     private String name;
     private double averageRating;
     private int numberOfReviews;
+    private String address;
 
     public static HospitalDto of(Hospital hospital) {
         return HospitalDto.builder()
@@ -18,6 +19,7 @@ public class HospitalDto {
                 .name(hospital.getName())
                 .averageRating(hospital.getAverageRating())
                 .numberOfReviews(hospital.getNumberOfReviews())
+                .address(hospital.getAddress())
                 .build();
     }
 }
