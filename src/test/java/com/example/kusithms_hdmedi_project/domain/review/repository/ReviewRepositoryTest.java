@@ -7,6 +7,7 @@ import com.example.kusithms_hdmedi_project.domain.review.dto.response.CreateRevi
 import com.example.kusithms_hdmedi_project.domain.review.dto.response.GetHospitalVReviewResponseDto;
 import com.example.kusithms_hdmedi_project.domain.review.dto.response.VerifyReviewResponseDto;
 import com.example.kusithms_hdmedi_project.domain.review.entity.ExaminationType;
+import com.example.kusithms_hdmedi_project.domain.review.entity.Review;
 import com.example.kusithms_hdmedi_project.domain.review.entity.ReviewExamination;
 import com.example.kusithms_hdmedi_project.domain.review.entity.VerifiedReview;
 import com.example.kusithms_hdmedi_project.domain.review.service.ReviewService;
@@ -262,5 +263,107 @@ public class ReviewRepositoryTest {
         Assertions.assertThat(verifiedReviews.get(4).getId()).isEqualTo(verifiedReview2.getId());
 
         verifiedReviews.forEach(data -> System.out.println(data.getContent()));
+    }
+
+    @Test
+    public void 병원_리뷰수_별점_업데이트_테스트(){
+        // given
+        Hospital hospital = Hospital.builder()
+                .name("연세건강정신병원")
+                .telephone("02-822-0345")
+                .url("https://blog.naver.com/verydoc")
+                .mapUrl("https://map.naver.com/p/search/%EC%97%B0%EC%84%B8%EA%B1%B4%EA%B0%95%EC%A0%95%EC%8B%A0%EB%B3%91%EC%9B%90/place/1123328494?placePath=?entry=pll&from=nx&fromNxList=true&c=15.00,0,0,0,dh")
+                .numberOfReviews(0)
+                .totalRating(0)
+                .area("주유노빌딩 2층")
+                .area1("서울")
+                .area2("동작구")
+                .area3("상도로 264")
+                .build();
+
+        em.persist(hospital);
+
+        Review review1 = Review.builder()
+                .content("리뷰리뷰리뷰리뷰11")
+                .price(10000)
+                .imageUrl("이미지입니다")
+                .doctor("오진영")
+                .rating(3)
+                .hospital(hospital)
+                .build();
+
+        Review review2 = Review.builder()
+                .content("리뷰리뷰리뷰리뷰222")
+                .price(10000)
+                .imageUrl("이미지입니다")
+                .doctor("오진영")
+                .rating(3)
+                .hospital(hospital)
+                .build();
+
+        Review review3 = Review.builder()
+                .content("리뷰리뷰리뷰리뷰333")
+                .price(10000)
+                .imageUrl("이미지입니다")
+                .doctor("오진영")
+                .rating(3)
+                .hospital(hospital)
+                .build();
+        Review review4 = Review.builder()
+                .content("리뷰리뷰리뷰리뷰444")
+                .price(10000)
+                .imageUrl("이미지입니다")
+                .doctor("오진영")
+                .rating(3)
+                .hospital(hospital)
+                .build();
+
+        Review review5 = Review.builder()
+                .content("리뷰리뷰리뷰리뷰555")
+                .price(10000)
+                .imageUrl("이미지입니다")
+                .doctor("오진영")
+                .rating(3)
+                .hospital(hospital)
+                .build();
+
+        Review review6 = Review.builder()
+                .content("리뷰리뷰리뷰리뷰666")
+                .price(10000)
+                .imageUrl("이미지입니다")
+                .doctor("오진영")
+                .rating(3)
+                .hospital(hospital)
+                .build();
+
+
+        em.persist(review1);
+        em.persist(review2);
+        em.persist(review3);
+        em.persist(review4);
+        em.persist(review5);
+        em.persist(review6);
+        em.flush();
+
+
+
+        // when
+        PageRequest pageRequest = PageRequest.of(0, 5);
+
+        reviewService.verifyReview(review1.getId());
+        reviewService.verifyReview(review2.getId());
+        reviewService.verifyReview(review3.getId());
+        reviewService.verifyReview(review4.getId());
+        reviewService.verifyReview(review5.getId());
+        reviewService.verifyReview(review6.getId());
+
+        em.flush();
+
+        List<VerifiedReview> verifiedReviews = verifiedReviewRepository.findByHospitalIdOrderByCreateDateDesc(hospital.getId(), pageRequest).getContent();
+
+        // then
+        Assertions.assertThat(hospital.getNumberOfReviews()).isEqualTo(6);
+        Assertions.assertThat(hospital.getTotalRating()).isEqualTo(18);
+        Assertions.assertThat(hospital.getAverageRating()).isEqualTo(3.0);
     }
 }

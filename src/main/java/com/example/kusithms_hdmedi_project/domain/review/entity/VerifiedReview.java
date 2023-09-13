@@ -65,7 +65,7 @@ public class VerifiedReview extends BaseTimeEntity {
                 .doctor(review.getDoctor())
                 .reviewExaminations(review.getReviewExaminations())
                 .build();
-        verifiedReview.getHospital().getVerifiedReviews().add(verifiedReview);
+        verifiedReview.getHospital().addVerifiedReview(verifiedReview);
         return verifiedReview;
     }
 
