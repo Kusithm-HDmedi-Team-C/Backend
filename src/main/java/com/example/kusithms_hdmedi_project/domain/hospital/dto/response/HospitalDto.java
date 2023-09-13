@@ -7,12 +7,14 @@ import lombok.Data;
 @Builder
 @Data
 public class HospitalDto {
+    private Long hospitalId;
     private String name;
     private double averageRating;
     private int numberOfReviews;
 
     public static HospitalDto of(Hospital hospital) {
         return HospitalDto.builder()
+                .hospitalId(hospital.getId())
                 .name(hospital.getName())
                 .averageRating(hospital.getAverageRating())
                 .numberOfReviews(hospital.getNumberOfReviews())

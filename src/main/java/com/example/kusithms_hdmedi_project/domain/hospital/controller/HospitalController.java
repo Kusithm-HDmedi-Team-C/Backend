@@ -1,8 +1,10 @@
 package com.example.kusithms_hdmedi_project.domain.hospital.controller;
 
 import com.example.kusithms_hdmedi_project.domain.hospital.dto.SearchType;
+import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalDetailsDto;
 import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalPageDto;
 import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalSearchDto;
+import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalSearchPageDto;
 import com.example.kusithms_hdmedi_project.domain.hospital.service.HospitalService;
 import com.example.kusithms_hdmedi_project.global.common.BaseResponse;
 import com.example.kusithms_hdmedi_project.global.common.SuccessCode;
@@ -33,13 +35,17 @@ public class HospitalController {
 
     @GetMapping("/search")
     public ResponseEntity<BaseResponse<?>> getHospitalsByName(@RequestParam String hospitalName) {
-        List<HospitalSearchDto> hospitals = hospitalService.searchHospitalsByName(hospitalName);
+        HospitalSearchPageDto hospitals = hospitalService.searchHospitalsByName(hospitalName);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.of(SuccessCode.OK, hospitals));
     }
 
     @GetMapping("/details/{hospitalId}")
-    public void getHospitalDetails(@PathVariable Long hospitalId, @RequestParam(defaultValue = "0") int reviewPageNum) {
-        hospitalService.getHospitalDetails(hospitalId, reviewPageNum);
+    public ResponseEntity<BaseResponse<?>> getHospitalDetails(@PathVariable Long hospitalId,
+                                                              @RequestParam(defaultValue = "0") int reviewPageNum,
+                                                              @RequestParam(defaultValue = "10") int pageSize) {
+        HospitalDetailsDto hospital = hospitalService.getHospitalDetails(hospitalId, reviewPageNum, pageSize);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(BaseResponse.of(SuccessCode.OK, hospital));
     }
 }
