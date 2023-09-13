@@ -4,6 +4,7 @@ import com.example.kusithms_hdmedi_project.domain.hospital.dto.SearchType;
 import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalDetailsDto;
 import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalPageDto;
 import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalSearchDto;
+import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalSearchPageDto;
 import com.example.kusithms_hdmedi_project.domain.hospital.entity.Hospital;
 import com.example.kusithms_hdmedi_project.domain.hospital.repository.HospitalRepository;
 import com.example.kusithms_hdmedi_project.domain.review.entity.VerifiedReview;
@@ -36,12 +37,10 @@ public class HospitalService {
         return HospitalPageDto.of(page);
     }
 
-    public List<HospitalSearchDto> searchHospitalsByName(String hospitalName) {
+    public HospitalSearchPageDto searchHospitalsByName(String hospitalName) {
         PageRequest pageRequest = PageRequest.of(0, 5);
-        return hospitalRepository.findByNameContaining(hospitalName, pageRequest).getContent().stream()
-                .map(HospitalSearchDto::of)
-                .collect(Collectors.toList());
-
+        Page<Hospital> hospitals = hospitalRepository.findByNameContaining(hospitalName, pageRequest);
+        return HospitalSearchPageDto.of(hospitals);
     }
 
     public HospitalDetailsDto getHospitalDetails(Long hospitalId, int pageNum, int pageSize) {

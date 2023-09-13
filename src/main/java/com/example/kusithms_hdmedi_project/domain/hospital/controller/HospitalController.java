@@ -4,6 +4,7 @@ import com.example.kusithms_hdmedi_project.domain.hospital.dto.SearchType;
 import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalDetailsDto;
 import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalPageDto;
 import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalSearchDto;
+import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalSearchPageDto;
 import com.example.kusithms_hdmedi_project.domain.hospital.service.HospitalService;
 import com.example.kusithms_hdmedi_project.global.common.BaseResponse;
 import com.example.kusithms_hdmedi_project.global.common.SuccessCode;
@@ -34,7 +35,7 @@ public class HospitalController {
 
     @GetMapping("/search")
     public ResponseEntity<BaseResponse<?>> getHospitalsByName(@RequestParam String hospitalName) {
-        List<HospitalSearchDto> hospitals = hospitalService.searchHospitalsByName(hospitalName);
+        HospitalSearchPageDto hospitals = hospitalService.searchHospitalsByName(hospitalName);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.of(SuccessCode.OK, hospitals));
     }
