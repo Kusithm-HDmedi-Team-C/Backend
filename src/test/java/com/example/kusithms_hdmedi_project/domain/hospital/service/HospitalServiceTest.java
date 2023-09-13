@@ -4,6 +4,7 @@ import com.example.kusithms_hdmedi_project.domain.hospital.dto.SearchType;
 import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalDto;
 import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalPageDto;
 import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalSearchDto;
+import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalSearchPageDto;
 import com.example.kusithms_hdmedi_project.domain.hospital.entity.Hospital;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.groups.Tuple;
@@ -231,7 +232,8 @@ class HospitalServiceTest {
             @Test
             void 만족도_순으로_병원정보를_제공한다() {
 
-                List<HospitalSearchDto> hospitals = hospitalService.searchHospitalsByName("서울");
+                HospitalSearchPageDto page = hospitalService.searchHospitalsByName("서울");
+                List<HospitalSearchDto> hospitals = page.getHospitals();
 
                 Assertions.assertThat(hospitals).extracting(
                                 HospitalSearchDto::getName,
@@ -245,7 +247,7 @@ class HospitalServiceTest {
         class 존재하지않은_이름으로_조회하면 {
             @Test
             void 빈_리스트를_리턴한다() {
-                List<HospitalSearchDto> hospitals = hospitalService.searchHospitalsByName("광주");
+                List<HospitalSearchDto> hospitals = hospitalService.searchHospitalsByName("광주").getHospitals();
                 Assertions.assertThat(hospitals.size()).isEqualTo(0);
                 Assertions.assertThat(expect2).isEqualTo(hospitals);
             }
