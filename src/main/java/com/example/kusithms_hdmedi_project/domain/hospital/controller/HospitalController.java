@@ -1,6 +1,7 @@
 package com.example.kusithms_hdmedi_project.domain.hospital.controller;
 
 import com.example.kusithms_hdmedi_project.domain.hospital.dto.SearchType;
+import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalDetailsDto;
 import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalPageDto;
 import com.example.kusithms_hdmedi_project.domain.hospital.dto.response.HospitalSearchDto;
 import com.example.kusithms_hdmedi_project.domain.hospital.service.HospitalService;
@@ -39,7 +40,11 @@ public class HospitalController {
     }
 
     @GetMapping("/details/{hospitalId}")
-    public void getHospitalDetails(@PathVariable Long hospitalId, @RequestParam(defaultValue = "0") int reviewPageNum) {
-        hospitalService.getHospitalDetails(hospitalId, reviewPageNum);
+    public ResponseEntity<BaseResponse<?>> getHospitalDetails(@PathVariable Long hospitalId,
+                                                              @RequestParam(defaultValue = "0") int reviewPageNum,
+                                                              @RequestParam(defaultValue = "10") int pageSize) {
+        HospitalDetailsDto hospital = hospitalService.getHospitalDetails(hospitalId, reviewPageNum, pageSize);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(BaseResponse.of(SuccessCode.OK, hospital));
     }
 }
