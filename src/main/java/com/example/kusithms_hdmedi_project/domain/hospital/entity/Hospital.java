@@ -69,4 +69,12 @@ public class Hospital extends BaseTimeEntity {
     public String getAddress() {
         return area1 + " " + area2 + " " + area3 + " " + area;
     }
+
+    public void addVerifiedReview(VerifiedReview verifiedReview) {
+        this.verifiedReviews.add(verifiedReview);
+        this.totalRating += verifiedReview.getRating();
+        this.numberOfReviews += 1;
+        double avgRating = (double) this.totalRating / this.numberOfReviews;
+        this.averageRating = (Math.floor(avgRating * 10) / 10);
+    }
 }
