@@ -40,8 +40,8 @@ public class ReviewService {
 
 
     public List<GetHospitalVReviewResponseDto> getHospitalVerifiedReview(Long hospitalId){
-        Hospital findHospital = getHospital(hospitalId);
-        return findHospital.getVerifiedReviews().stream()
+        List<VerifiedReview> findVerifiedReviews = verifiedReviewRepository.findByHospitalIdOrderByCreateDateDesc(hospitalId);
+        return findVerifiedReviews.stream()
                 .map(GetHospitalVReviewResponseDto::of)
                 .collect(Collectors.toList());
     }
