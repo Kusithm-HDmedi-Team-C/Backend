@@ -7,10 +7,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -63,7 +67,9 @@ public class Hospital extends BaseTimeEntity {
 
 
     public String getAddress() {
-        return area1 + " " + area2 + " " + area3 + " " + area;
+        return Stream.of(area1, area2, area3, area)
+                .filter(StringUtils::isNotEmpty)
+                .collect(Collectors.joining(" "));
     }
 
     public void addVerifiedReview(VerifiedReview verifiedReview) {

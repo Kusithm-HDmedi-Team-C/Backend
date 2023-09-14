@@ -9,6 +9,8 @@ import com.example.kusithms_hdmedi_project.domain.hospital.entity.Hospital;
 import com.example.kusithms_hdmedi_project.domain.hospital.repository.HospitalRepository;
 import com.example.kusithms_hdmedi_project.domain.review.entity.VerifiedReview;
 import com.example.kusithms_hdmedi_project.domain.review.repository.VerifiedReviewRepository;
+import com.example.kusithms_hdmedi_project.global.error.exception.EntityNotFoundException;
+import com.example.kusithms_hdmedi_project.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,7 +47,7 @@ public class HospitalService {
 
     public HospitalDetailsDto getHospitalDetails(Long hospitalId, int pageNum, int pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNum, pageSize);
-        Hospital hospital = hospitalRepository.findById(hospitalId).orElseThrow();
+        Hospital hospital = hospitalRepository.findById(hospitalId).orElseThrow(() -> new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
         Page<VerifiedReview> page = verifiedReviewRepository.findByHospitalIdOrderByCreateDateDesc(hospitalId, pageRequest);
         return HospitalDetailsDto.of(hospital, page);
     }
