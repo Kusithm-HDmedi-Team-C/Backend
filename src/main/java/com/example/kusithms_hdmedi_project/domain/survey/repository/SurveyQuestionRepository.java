@@ -1,6 +1,6 @@
-package com.example.kusithms_hdmedi_project.question.repository;
+package com.example.kusithms_hdmedi_project.domain.survey.repository;
 
-import com.example.kusithms_hdmedi_project.question.entity.SurveyQuestion;
+import com.example.kusithms_hdmedi_project.domain.survey.entity.SurveyQuestion;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

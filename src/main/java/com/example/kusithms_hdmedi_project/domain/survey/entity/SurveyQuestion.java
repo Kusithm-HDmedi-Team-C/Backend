@@ -1,4 +1,4 @@
-package com.example.kusithms_hdmedi_project.question.entity;
+package com.example.kusithms_hdmedi_project.domain.survey.entity;
 
 import com.example.kusithms_hdmedi_project.global.common.BaseTimeEntity;
 import lombok.AccessLevel;

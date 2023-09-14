@@ -1,4 +1,4 @@
-package com.example.kusithms_hdmedi_project.question.dto.Response;
+package com.example.kusithms_hdmedi_project.domain.survey.dto.Response;
 
 import lombok.Builder;
 import lombok.Getter;

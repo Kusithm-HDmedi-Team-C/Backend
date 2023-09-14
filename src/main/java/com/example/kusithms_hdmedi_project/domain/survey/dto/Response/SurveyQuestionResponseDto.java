@@ -1,7 +1,7 @@
-package com.example.kusithms_hdmedi_project.question.dto.Response;
+package com.example.kusithms_hdmedi_project.domain.survey.dto.Response;
 
-import com.example.kusithms_hdmedi_project.question.entity.QuestionType;
-import com.example.kusithms_hdmedi_project.question.entity.SurveyQuestion;
+import com.example.kusithms_hdmedi_project.domain.survey.entity.QuestionType;
+import com.example.kusithms_hdmedi_project.domain.survey.entity.SurveyQuestion;
 import lombok.Builder;
 import lombok.Data;
 

@@ -1,9 +1,9 @@
-package com.example.kusithms_hdmedi_project.question.controller;
+package com.example.kusithms_hdmedi_project.domain.survey.controller;
 
 import com.example.kusithms_hdmedi_project.global.common.BaseResponse;
 import com.example.kusithms_hdmedi_project.global.common.SuccessCode;
-import com.example.kusithms_hdmedi_project.question.dto.Response.SurveyQuestionResponseDto;
-import com.example.kusithms_hdmedi_project.question.service.SurveyQuestionService;
+import com.example.kusithms_hdmedi_project.domain.survey.dto.Response.SurveyQuestionResponseDto;
+import com.example.kusithms_hdmedi_project.domain.survey.service.SurveyQuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
