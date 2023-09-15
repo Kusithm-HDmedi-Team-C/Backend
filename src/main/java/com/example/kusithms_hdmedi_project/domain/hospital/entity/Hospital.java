@@ -1,6 +1,5 @@
 package com.example.kusithms_hdmedi_project.domain.hospital.entity;
 
-import com.example.kusithms_hdmedi_project.domain.review.entity.Review;
 import com.example.kusithms_hdmedi_project.domain.review.entity.VerifiedReview;
 import com.example.kusithms_hdmedi_project.global.common.BaseTimeEntity;
 import lombok.AccessLevel;
@@ -11,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -19,6 +17,9 @@ import java.util.stream.Stream;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@Table(indexes = {
+                @Index(name = "idx_hospital_number_of_reviews_name", columnList = "numberOfReviews, name"),
+                @Index(name = "idx_hospital_average_rating_name", columnList = "averageRating, name")})
 public class Hospital extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
