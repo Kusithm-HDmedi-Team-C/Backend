@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class SurveyQuestion extends BaseTimeEntity {
 
     private String content;
 
+    @BatchSize(size = 30)
     @OneToMany(mappedBy = "question")
     private List<Example> examples = new ArrayList<>();
 
