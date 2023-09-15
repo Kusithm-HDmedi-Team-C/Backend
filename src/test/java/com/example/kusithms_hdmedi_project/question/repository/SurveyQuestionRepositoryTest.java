@@ -1,7 +1,8 @@
 package com.example.kusithms_hdmedi_project.question.repository;
 
-import com.example.kusithms_hdmedi_project.question.entity.QuestionType;
-import com.example.kusithms_hdmedi_project.question.entity.SurveyQuestion;
+import com.example.kusithms_hdmedi_project.domain.survey.entity.QuestionType;
+import com.example.kusithms_hdmedi_project.domain.survey.entity.SurveyQuestion;
+import com.example.kusithms_hdmedi_project.domain.survey.repository.SurveyQuestionRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,6 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional

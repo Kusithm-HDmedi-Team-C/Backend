@@ -1,8 +1,8 @@
-package com.example.kusithms_hdmedi_project.question.service;
+package com.example.kusithms_hdmedi_project.domain.survey.service;
 
-import com.example.kusithms_hdmedi_project.question.dto.Response.SurveyQuestionResponseDto;
-import com.example.kusithms_hdmedi_project.question.entity.SurveyQuestion;
-import com.example.kusithms_hdmedi_project.question.repository.SurveyQuestionRepository;
+import com.example.kusithms_hdmedi_project.domain.survey.dto.Response.SurveyQuestionResponseDto;
+import com.example.kusithms_hdmedi_project.domain.survey.entity.SurveyQuestion;
+import com.example.kusithms_hdmedi_project.domain.survey.repository.SurveyQuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
