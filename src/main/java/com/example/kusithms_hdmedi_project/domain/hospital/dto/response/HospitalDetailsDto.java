@@ -19,6 +19,7 @@ public class HospitalDetailsDto {
     private String address;
     private String url;
     private String mapUrl;
+    private String telephone;
     private List<GetHospitalVReviewResponseDto> reviews;
     private int pageNumber;
     private int count;
@@ -32,6 +33,7 @@ public class HospitalDetailsDto {
                 .address(hospital.getAddress())
                 .url(hospital.getUrl())
                 .mapUrl(hospital.getMapUrl())
+                .telephone(hospital.getTelephone())
                 .reviews(page.getContent().stream()
                         .map(GetHospitalVReviewResponseDto::of)
                         .collect(Collectors.toList()))
