@@ -42,9 +42,9 @@ public class HospitalController {
 
     @GetMapping("/details/{hospitalId}")
     public ResponseEntity<BaseResponse<?>> getHospitalDetails(@PathVariable Long hospitalId,
-                                                              @RequestParam(defaultValue = "0") int reviewPageNum,
+                                                              @RequestParam(defaultValue = "0") int pageNumber,
                                                               @RequestParam(defaultValue = "10") int pageSize) {
-        HospitalDetailsDto hospital = hospitalService.getHospitalDetails(hospitalId, reviewPageNum, pageSize);
+        HospitalDetailsDto hospital = hospitalService.getHospitalDetails(hospitalId, pageNumber, pageSize);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BaseResponse.of(SuccessCode.OK, hospital));
     }
