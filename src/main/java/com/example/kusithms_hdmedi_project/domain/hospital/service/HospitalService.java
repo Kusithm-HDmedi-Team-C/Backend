@@ -31,8 +31,12 @@ public class HospitalService {
     private final VerifiedReviewRepository verifiedReviewRepository;
 
     public HospitalPageDto getHospitalPage(SearchType searchType, int pageNumber, int pageSize) {
-        Sort sort = Sort.by(searchType.getHospitalTableValue()).descending()
-                .and(Sort.by("name").ascending());
+        Sort sort = Sort.by(searchType.getHospitalTableValue()).descending();
+        if (SearchType.AVERAGE_RATING.equals(searchType)) {
+            sort = sort.and(Sort.by(SearchType.NUMBER_OF_REVIEWS.getHospitalTableValue()).descending());
+        } else {
+            sort = sort.and(Sort.by(SearchType.AVERAGE_RATING.getHospitalTableValue()).descending());
+        }
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
 
         Page<Hospital> page = hospitalRepository.findAll(pageRequest);
@@ -40,7 +44,9 @@ public class HospitalService {
     }
 
     public HospitalSearchPageDto searchHospitalsByName(String hospitalName) {
-        PageRequest pageRequest = PageRequest.of(0, 5);
+        Sort sort = Sort.by(SearchType.AVERAGE_RATING.getHospitalTableValue()).descending()
+                .and(Sort.by(SearchType.NUMBER_OF_REVIEWS.getHospitalTableValue()).descending());
+        PageRequest pageRequest = PageRequest.of(0, 5, sort);
         Page<Hospital> hospitals = hospitalRepository.findByNameContaining(hospitalName, pageRequest);
         return HospitalSearchPageDto.of(hospitals);
     }
