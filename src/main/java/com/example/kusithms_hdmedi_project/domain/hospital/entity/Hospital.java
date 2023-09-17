@@ -18,8 +18,8 @@ import java.util.stream.Stream;
 @Getter
 @Entity
 @Table(indexes = {
-                @Index(name = "idx_hospital_number_of_reviews_name", columnList = "numberOfReviews, name"),
-                @Index(name = "idx_hospital_average_rating_name", columnList = "averageRating, name")})
+                @Index(name = "idx_hospital_number_of_reviews_average_rating", columnList = "numberOfReviews, averageRating"),
+                @Index(name = "idx_hospital_average_rating_number_of_reviews", columnList = "averageRating, numberOfReviews")})
 public class Hospital extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
