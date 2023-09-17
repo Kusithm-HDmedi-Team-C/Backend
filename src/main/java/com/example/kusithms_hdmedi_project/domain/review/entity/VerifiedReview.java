@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class VerifiedReview extends BaseTimeEntity {
     @Column(name = "price")
     private Integer price;
 
+    @BatchSize(size = 20)
     @OneToMany(mappedBy = "verifiedReview", fetch = FetchType.LAZY)
     private List<ReviewExamination> reviewExaminations= new ArrayList<>();
 
